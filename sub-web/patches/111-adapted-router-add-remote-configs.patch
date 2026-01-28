@@ -1,0 +1,171 @@
+From 6ede3e26b9d690a74476c078535dc3fad0775b73
+From: DawnDeng <socialdng365@gmail.com>
+Date: Wed, 28 Jan 2026 21:23:34 +0800
+Subject: [PATCH] adapted router add remote configs
+
+---
+ .env                               |   2 +-
+ package.json                       |   2 +-
+ src/composables/useSubscription.js |   5 ++
+ src/config/remote-configs.js       | 104 +++++++++++++++++++++++++++++
+ vite.config.js                     |   1 +
+ 5 files changed, 112 insertions(+), 2 deletions(-)
+
+--- a/.env
++++ b/.env
+@@ -12,7 +12,7 @@ VITE_SUBCONVERTER_DOC_ADVANCED = "https://github.com/tindy2013/subconverter/blob
+ VITE_SUBCONVERTER_DEFAULT_BACKEND = "https://api.wcc.best"
+ 
+ # 短链接后端
+-VITE_MYURLS_API = "https://suosuo.de/short"
++VITE_MYURLS_API = "https://suo.yt/short"
+ 
+ # 文本托管后端
+ VITE_CONFIG_UPLOAD_API = "https://oss.wcc.best/upload"
+--- a/package.json
++++ b/package.json
+@@ -3,7 +3,7 @@
+   "version": "0.1.0",
+   "private": true,
+   "engines": {
+-    "node": "22.x"
++    "node": ">=20.0.0"
+   },
+   "scripts": {
+     "dev": "vite",
+--- a/src/composables/useSubscription.js
++++ b/src/composables/useSubscription.js
+@@ -49,6 +49,11 @@ export function useSubscription() {
+       if (form.tpl.clash.doh === true) {
+         params += "&clash.doh=true";
+       }
++
++      if (!form.expand) {
++        params += "&classic=true";
++      }
++
+       params += "&new_name=" + form.new_name.toString();
+     }
+ 
+--- a/src/config/remote-configs.js
++++ b/src/config/remote-configs.js
+@@ -1,5 +1,109 @@
+ // 远程配置选项
+ export const REMOTE_CONFIGS = [
++  {
++    label: "自用配置",
++    options: [
++      {
++        label: "Custom_Clash 默认配置(与Github同步)",
++        value: "https://raw.githubusercontent.com/Dawneng/Rule/master/Script/Custom_Clash_Cfg.ini"
++      }
++    ]
++  },
++  {
++    label: "ACL4SSR",
++    options: [
++      {
++        label: "ACL4SSR_Online 默认版 分组比较全 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online.ini"
++      },
++      {
++        label: "ACL4SSR_Online_AdblockPlus 更多去广告 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_AdblockPlus.ini"
++      },
++      {
++        label: "ACL4SSR_Online_NoAuto 无自动测速 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_NoAuto.ini"
++      },
++      {
++        label: "ACL4SSR_Online_Mini 精简版 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini"
++      },
++      {
++        label: "ACL4SSR_Online_Mini_AdblockPlus.ini 精简版 更多去广告 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_AdblockPlus.ini"
++      },
++      {
++        label: "ACL4SSR_Online_Mini_NoAuto.ini 精简版 不带自动测速 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_NoAuto.ini"
++      },
++      {
++        label: "ACL4SSR_Online_Mini_Fallback.ini 精简版 带故障转移 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_Fallback.ini"
++      },
++      {
++        label: "ACL4SSR_Online_Mini_MultiMode.ini 精简版 自动测速、故障转移、负载均衡 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini_MultiMode.ini"
++      },
++      {
++        label: "ACL4SSR_Online_Full 全分组 重度用户使用 (与Github同步)",
++        value:
++          "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full.ini"
++        },
++        {
++          label: "ACL4SSR_Online_Full_AdblockPlus 全分组 重度用户使用 更多去广告 (与Github同步)",
++          value:
++            "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_AdblockPlus.ini"
++        },
++        {
++          label: "ACL4SSR 本地 默认版 分组比较全",
++          value: "config/ACL4SSR.ini"
++        },
++        {
++          label: "ACL4SSR_Mini 本地 精简版",
++          value: "config/ACL4SSR_Mini.ini"
++        },
++        {
++          label: "ACL4SSR_Mini_NoAuto.ini 本地 精简版+无自动测速",
++          value: "config/ACL4SSR_Mini_NoAuto.ini"
++        },
++        {
++          label: "ACL4SSR_Mini_Fallback.ini 本地 精简版+fallback",
++          value: "config/ACL4SSR_Mini_Fallback.ini"
++        },
++        {
++          label: "ACL4SSR_BackCN 本地 回国",
++          value: "config/ACL4SSR_BackCN.ini"
++        },
++        {
++          label: "ACL4SSR_NoApple 本地 无苹果分流",
++          value: "config/ACL4SSR_NoApple.ini"
++        },
++        {
++          label: "ACL4SSR_NoAuto 本地 无自动测速 ",
++          value: "config/ACL4SSR_NoAuto.ini"
++        },
++        {
++          label: "ACL4SSR_NoAuto_NoApple 本地 无自动测速&无苹果分流",
++          value: "config/ACL4SSR_NoAuto_NoApple.ini"
++        },
++        {
++          label: "ACL4SSR_NoMicrosoft 本地 无微软分流",
++          value: "config/ACL4SSR_NoMicrosoft.ini"
++        },
++        {
++          label: "ACL4SSR_WithGFW 本地 GFW列表",
++          value: "config/ACL4SSR_WithGFW.ini"
++        }
++    ]
++  },
+   {
+     label: "universal",
+     options: [
+--- a/vite.config.js
++++ b/vite.config.js
+@@ -4,6 +4,7 @@ import { createSvgIconsPlugin } from 'vite-plugin-svg-icons'
+ import path from 'path'
+ 
+ export default defineConfig({
++    base: '/sub-web/',
+     plugins: [
+         vue(),
+         createSvgIconsPlugin({
